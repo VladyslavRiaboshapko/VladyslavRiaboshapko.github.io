@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness App</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(18deg, rgba(28,29,33,1) 0%, rgba(51,54,57,1) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        
+
+        h1 {
+            font-size: 30px;
+            color: white;
+            text-align: center;
+            margin-bottom: 2rem;
+            margin-left: -155px;
+        }
+
+        .main-header {
+            color: #f36906;
+            font-size: 25px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            width: calc(100% - 15px);
+            max-width: 400px;
+            margin-bottom: 15px;
+        }
+
+        .search-wrapper {
+            position: relative;
+            width: 90%;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            pointer-events: none;
+            color: #9ca3af;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 40px;
+            padding: 2px 0px 2px 35px;
+            border-radius: 10px;
+            color: #e5e7eb;
+            background: linear-gradient(to bottom right, #202025, #2b2f32);
+            border: 3px solid #34363b;
+            box-shadow: inset 1px 1px 10px rgb(23, 25, 27);
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 65px);
+            gap: 8px;
+        }
+
+        .feature-button {
+            width: 50px;
+            height: 50px;
+            aspect-ratio: 1;
+            background: linear-gradient(to top left, #1c1d21, #2a2d31);
+            border: none;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .feature-button.selected {
+            background: linear-gradient(to top right, #ffa059, #f36906);
+            box-shadow: 0 0 10px #f36906;
+            color: white;
+        }
+
+        .feature-button i {
+            font-size: 5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .button-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        span {
+            font-size: 12px;
+            margin-top: 3px;
+            color: #4f5254;
+        }
+
+        span.selected {
+            color: white;
+            text-decoration: underline 1px;
+            text-decoration-color: #f38806;
+            text-underline-offset: 8px;
+        }
+
+        .exercises-container, .progress-container, .training-container, .diet-container {
+            width: 100%;
+            height: 400px;
+            max-height: 500px;
+            max-width: 280px;
+            position: relative;
+            overflow: scroll;
+            margin-top: 15px;
+        }
+
+
+        .square {
+            width: 100px;
+            height: 100px;
+        }
+
+        img {
+            width: 100%;
+            height: 100px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            display: none;
+        }
+
+        ::-webkit-scrollbar-corner {
+            display: none;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        nav { 
+            width: calc(100% - 20px);
+            height: 40px;
+            max-width: 400px;
+            background: linear-gradient(to right, #34373b, #323439);
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 5px;
+            color: #888;
+            transition: all 0.3s ease;
+        }
+        .nav-item i {
+            font-size: 5px;
+            color: white;
+        }
+        .nav-item span {
+            font-size: 14px;
+            color: #888;
+        }
+        .nav-item.selected {
+            background: linear-gradient(to top right, #ffa059, #f36906);
+            color: white;
+            height: 70%;
+            width: 25%;
+        }
+        .nav-item.selected i,
+        .nav-item.selected span {
+            color: #fff;
+        }
+        .nav-item.selected {
+            box-shadow: 0 0 15px #f36906;
+        }
+
+        .month-selector {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .arrow {
+            cursor: pointer;
+            font-size: 24px;
+            user-select: none;
+        }
+
+        .day-selector {
+            display: flex;
+            overflow-x: scroll;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            padding-top: 8px;
+        }
+
+        .day {
+            width: 35px;
+            height: 50px;
+            border-radius: 12px;
+            background-color: #4a4d51;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .day.selected {
+            background: linear-gradient(to top right, #ffa059, #f36906);
+            box-shadow: 0 0 8px #f36906;
+        }
+
+        .big-progress-ring {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .progress-ring {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            
+        }
+
+        .progress-ring circle {
+            fill: transparent;
+            stroke-width: 5;
+        }
+
+        .progress-ring .background {
+            stroke: #4a4d51;
+        }
+
+        .progress-ring .progress {
+            stroke: #f36906;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 2px #f36906);
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .calories {
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .calories-label {
+            font-size: 18px;
+        }
+
+        .small-rings {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+
+        .small-ring {
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+
+        .small-ring circle {
+            stroke-width: 6;
+            fill: transparent;
+        }
+
+        .small-ring-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .small-ring-value {
+            font-weight: bold;
+        }
+
+        .chart-container {
+            width: 100%;
+            margin: 0 auto;
+            background: transparent;
+            border-radius: 8px;
+            padding: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 150px !important;
+        }
+
+        .container {
+            margin: 0 auto;
+            padding: 0px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        h2 {
+            margin-top: 10px;
+            color: white;
+        }
+        .add-button {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(to top right, #2b2f32, #1c1d21);
+            border-radius: 10px;
+            box-shadow: inset 0 4px 6px #202025;
+            color: #34363b;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .dayProgramm {
+            background-color: transparent;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .day-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #5c5e62;
+            background: transparent;
+            border: none;
+        }
+        .exercise {
+            margin-bottom: 5px;
+        }
+        .training-programm-exercises {
+            display: flex;
+            justify-content: center;
+            flex-direction: row;
+        }
+        select {
+            width: 48%;
+            height: 30px;
+            padding: 5px;
+            margin-top: 5px;
+            background: transparent;
+            border: none;
+            color: #5c5e62;
+        }
+        .noaar-field-write {
+            height: 30px;
+            margin-top: 5px;
+            width: 48%;
+            color: white;
+            background: transparent;
+            border: none;
+        }
+
+        .slider-container {
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+            padding: 10px 0;
+        }
+
+        .slider-item {
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            margin-right: 10px;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .slider-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .slider-item .caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        .add-btn {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(to top right, #34373b, #2b2f32);
+            color: white;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .day-container {
+            margin-bottom: 20px;
+            background: transparent;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .day-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .day-title input {
+            flex-grow: 1;
+            margin-right: 4px;
+            margin-left: -10px;
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
+            background: transparent;
+            color: white;
+            font-size: 17px;
+            font-weight: 500;
+        }
+        .add-dish-btn {
+            padding: 8px 16px;
+            background: linear-gradient(to top right, #34373b, #2b2f32);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .dish-list {
+            margin-bottom: 10px;
+        }
+        .dish-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .dish-item select {
+            flex-grow: 1;
+            margin-right: 10px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .dish-item input {
+            width: 80px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .nutrition-total {
+            background: transparent;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 5px;
+            color: white;
+        }
+        .nutrition-total p {
+            margin-bottom: 5px;
+        }
+
+        .account-container, .settings-container {
+            width: 100%;
+            height: 400px;
+            max-height: 500px;
+            max-width: 280px;
+            position: relative;
+            overflow: scroll;
+            margin-top: 15px;
+            display: none;
+        }
+        .message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .success {
+            width: 100%;
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 280px;
+            position: relative;
+        }
+        label {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .select-account {
+            margin-top: 5px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            height: 42px;
+            width: 100px;
+        }
+
+        .input-account {
+            width: 100%;
+            height: 30px;
+            padding: 2px 0px 2px 10px;
+            margin-top: 5px;
+            border-radius: 10px;
+            color: #e5e7eb;
+            background: linear-gradient(to bottom right, #202025, #2b2f32);
+            border: 3px solid #34363b;
+            box-shadow: inset 1px 1px 10px rgb(23, 25, 27);
+            outline: none;
+        }
+        .save-changes {
+            margin-top: 20px;
+            padding: 10px;
+            background: linear-gradient(to top right, #4a4d51, #34373b);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .save-changes:hover {
+            background-color: #45a049;
+        }
+
+        .exercise-item {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .exercise-label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-top-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mh">Move<span class="main-header">Up</span></h1>
+        <div class="search-bar">
+            <div class="search-wrapper">
+                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" placeholder="Search" class="search-input">
+            </div>
+        </div>
+        <main>
+            <div class="buttons-grid">
+                <div class="button-wrap">
+                    <button class="feature-button" data-page="Progress">
+                        <i data-lucide="bar-chart"></i>
+                    </button>
+                    <span class="fb-span">Progress</span>
+                </div>
+                <div class="button-wrap">
+                    <button class="feature-button selected" data-page="Exercises">
+                        <i data-lucide="dumbbell"></i>
+                    </button>
+                    <span class="fb-span selected">Exercises</span>
+                </div>
+                <div class="button-wrap">
+                    <button class="feature-button" data-page="Training">
+                        <i data-lucide="book"></i>
+                    </button>
+                    <span class="fb-span">Training</span>
+                </div>
+                <div class="button-wrap">
+                    <button class="feature-button" data-page="Diet">
+                        <i data-lucide="apple"></i>
+                    </button>
+                    <span class="fb-span">Diet</span>
+                </div>
+            </div>
+        </main>
+        <div class="exercises-container">
+            <div class="exercise-item">
+                <img src="D:/Global IT/Python/Sport App/exerexa/13-Push-Up-Position-Knee-Tucks-gif.gif" alt="Exercise 1">
+                <div class="exercise-label">Push-Up Knee Tucks</div>
+            </div>
+            <div class="exercise-item">
+                <img src="D:/Global IT/Python/Sport App/exerexa/biceps.gif" alt="Exercise 2">
+                <div class="exercise-label">Bicep Curls</div>
+            </div>
+            <div class="exercise-item">
+                <img src="D:/Global IT/Python/Sport App/exerexa/prised.gif" alt="Exercise 3">
+                <div class="exercise-label">Squats</div>
+            </div>
+            <div class="exercise-item">
+                <img src="D:/Global IT/Python/Sport App/exerexa/push_legs.gif" alt="Exercise 4">
+                <div class="exercise-label">Leg Press</div>
+            </div>
+            <div class="exercise-item">
+                <img src="D:/Global IT/Python/Sport App/exerexa/down-tyaga.gif" alt="Exercise 5">
+                <div class="exercise-label">Lat Pulldown</div>
+            </div>
+            <div class="exercise-item">
+                <img src="D:/Global IT/Python/Sport App/exerexa/BUTTERFLY_GOOD.gif" alt="Exercise 6">
+                <div class="exercise-label">Butterfly</div>
+            </div>
+            <div class="exercise-item">
+                <img src="D:/Global IT/Python/Sport App/exerexa/leg-extension.gif" alt="Exercise 7">
+                <div class="exercise-label">Leg Extension</div>
+            </div>
+            <div class="exercise-item">
+                <img src="D:/Global IT/Python/Sport App/exerexa/biceps_second.gif" alt="Exercise 8">
+                <div class="exercise-label">Hammer Curls</div>
+            </div>
+            <div class="exercise-item">
+                <img src="D:/Global IT/Python/Sport App/exerexa/Extension.gif" alt="Exercise 9">
+                <div class="exercise-label">Tricep Extension</div>
+            </div>
+            <div class="exercise-item">
+                <img src="D:/Global IT/Python/Sport App/exerexa/triceps_rope.gif" alt="Exercise 10">
+                <div class="exercise-label">Tricep Pushdown</div>
+            </div>
+        </div>
+        <div class="progress-container" style="display: none;">
+            <div class="month-selector">
+                <span class="arrow" id="prevMonth">&#9664;</span>
+                <span id="currentMonth"></span>
+                <span class="arrow" id="nextMonth">&#9654;</span>
+            </div>
+            <div class="day-selector" id="daySelector"></div>
+            <div class="big-progress-ring">
+                <svg class="progress-ring" viewBox="0 0 100 100">
+                    <circle class="background" cx="50" cy="50" r="45"></circle>
+                    <circle class="progress" cx="50" cy="50" r="45"></circle>
+                </svg>
+                <div class="progress-text">
+                    <div class="calories" id="caloriesBurned">1723</div>
+                    <div class="calories-label">Cal</div>
+                </div>
+            </div>
+            <div class="small-rings">
+                <div class="small-ring">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="background" cx="50" cy="50" r="45"></circle>
+                        <circle class="progress" cx="50" cy="50" r="45" stroke="#8a2be2" style="filter: drop-shadow(0 0 2px #8a2be2);"></circle>
+                    </svg>
+                    <div class="small-ring-text">
+                        <div class="small-ring-value" id="steps">14534</div>
+                        <div>Steps</div>
+                    </div>
+                </div>
+                <div class="small-ring">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="background" cx="50" cy="50" r="45"></circle>
+                        <circle class="progress" cx="50" cy="50" r="45" stroke="#00e03d" style="filter: drop-shadow(0 0 2px #00e03d);"></circle>
+                    </svg>
+                    <div class="small-ring-text">
+                        <div class="small-ring-value" id="distance">5.1</div>
+                        <div>km</div>
+                    </div>
+                </div>
+                <div class="small-ring">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="background" cx="50" cy="50" r="45"></circle>
+                        <circle class="progress" cx="50" cy="50" r="45" stroke="#1e90ff" style="filter: drop-shadow(0 0 2px #1e90ff);"></circle>
+                    </svg>
+                    <div class="small-ring-text">
+                        <div class="small-ring-value" id="water">2</div>
+                        <div>L</div>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="fitnessChart"></canvas>
+            </div>
+        </div>
+        <div class="training-container" style="display: none;">
+            <h2>Your Training Program</h2>
+            <div class="container">
+                <div class="header">
+                    <button class="add-button" id="addDay">+</button>
+                </div>
+                <div id="program"></div>
+            </div>
+        </div>
+        <div class="diet-container" style="display: none;">
+            <div class="slider-container" id="productSlider"></div>
+            <h2>Your Diet <span class="add-btn" onclick="addDay()">+</span></h2>
+            <div id="dietContainer"></div>
+        </div>
+        <div class="container">
+            <div class="account-container" style="display: none;">
+                <form id="userForm">
+                    <label for="nickname">Nickname:</label>
+                    <input class="input-account" type="text" id="nickname" name="nickname" required>
+
+                    <label for="password">New Password:</label>
+                    <input class="input-account" type="password" id="password" name="password">
+
+                    <label for="weight">Weight (kg):</label>
+                    <input class="input-account" type="number" id="weight" name="weight" value="75" min="1" max="500" step="0.1" required>
+
+                    <label for="height">Height (cm):</label>
+                    <input class="input-account" type="number" id="height" name="height" value="170" min="1" max="300" required>
+
+                    <label for="gender">Gender:</label>
+                    <select class="select-account" id="gender" name="gender" required>
+                        <option value="">Select gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+
+                    <label for="goal">Goal:</label>
+                    <select class="select-account" id="goal" name="goal" required>
+                        <option value="">Select goal</option>
+                        <option value="lose_weight">Lose weight</option>
+                        <option value="dry_out">Dry out</option>
+                        <option value="gain_muscle">Gain muscle mass</option>
+                        <option value="maintain">Maintain your condition</option>
+                    </select>
+
+                    <button type="submit" class="save-changes">Save Changes</button>
+                </form>
+                <div id="message" class="message"></div>
+            </div>
+            <div class="settings-container" style="display: none;">
+                <div class="square" style="width: 100px; height: 100px; background-color: pink;"></div>
+            </div>
+        </div>
+        <nav>
+            <div class="nav-item selected" data-item="home">
+                <i data-lucide="home"></i>
+            </div>
+            <div class="nav-item" data-item="account">
+                <i data-lucide="user"></i>
+            </div>
+            <div class="nav-item" data-item="settings">
+                <i data-lucide="settings"></i>
+            </div>
+        </nav>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+            const navItems = document.querySelectorAll('.nav-item');
+            const featureButtons = document.querySelectorAll('.feature-button');
+            const fbSpans = document.querySelectorAll('.fb-span');
+            const searchBar = document.querySelector('.search-bar');
+            const containers = {
+                Exercises: document.querySelector('.exercises-container'),
+                Progress: document.querySelector('.progress-container'),
+                Training: document.querySelector('.training-container'),
+                Diet: document.querySelector('.diet-container'),
+            };
+
+
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+
+            const fitnessData = [
+                { hour: 0, steps: 1200, calories: 150 },
+                { hour: 3, steps: 2500, calories: 320 },
+                { hour: 6, steps: 1800, calories: 230 },
+                { hour: 9, steps: 3200, calories: 410 },
+                { hour: 12, steps: 2800, calories: 360 },
+                { hour: 15, steps: 3500, calories: 450 },
+                { hour: 18, steps: 2100, calories: 270 },
+                { hour: 21, steps: 1500, calories: 190 },
+                { hour: 24, steps: 800, calories: 100 }
+            ];
+
+            let currentDate = new Date();
+            let selectedDay = currentDate.getDate();
+
+            function updateMonth() {
+                document.getElementById('currentMonth').textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+            }
+
+            function updateDays() {
+                const daySelector = document.getElementById('daySelector');
+                daySelector.innerHTML = '';
+                const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const dayElement = document.createElement('div');
+                    dayElement.classList.add('day');
+                    dayElement.textContent = i;
+                    if (i === selectedDay) {
+                        dayElement.classList.add('selected');
+                    }
+                    dayElement.addEventListener('click', () => selectDay(i));
+                    daySelector.appendChild(dayElement);
+                }
+            }
+
+            function selectDay(day) {
+                selectedDay = day;
+                updateDays();
+                updateProgress();
+            }
+
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    navItems.forEach(navItem => navItem.classList.remove('selected'));
+                    item.classList.add('selected');
+                    const pageName = item.getAttribute('data-item');
+                    showPage(pageName);
+                });
+            });
+
+            function showPage(pageName) {
+                const mainContent = document.querySelector('main');
+                const accountContainer = document.querySelector('.account-container');
+                const settingsContainer = document.querySelector('.settings-container');
+                const searchBar = document.querySelector('.search-bar');
+                const allContainers = document.querySelectorAll('.exercises-container, .progress-container, .training-container, .diet-container');
+
+                // Hide all containers
+                allContainers.forEach(container => container.style.display = 'none');
+                mainContent.style.display = 'none';
+                accountContainer.style.display = 'none';
+                settingsContainer.style.display = 'none';
+                searchBar.style.display = 'none';
+
+                if (pageName === 'home') {
+                    mainContent.style.display = 'block';
+                    searchBar.style.display = 'flex';
+                    showFeaturePage('Progress');
+                } else if (pageName === 'account') {
+                    accountContainer.style.display = 'flex';
+                    accountContainer.style.justifyContent = 'center';
+                    accountContainer.style.alignItems = 'center';
+                    accountContainer.style.height = 'calc(100vh - 60px)';
+                } else if (pageName === 'settings') {
+                    settingsContainer.style.display = 'flex';
+                    settingsContainer.style.justifyContent = 'center';
+                    settingsContainer.style.alignItems = 'center';
+                    settingsContainer.style.height = 'calc(100vh - 60px)';
+                }
+            }
+
+            function showFeaturePage(pageName) {
+                Object.keys(containers).forEach(key => {
+                    containers[key].style.display = 'none';
+                });
+                containers[pageName].style.display = 'block';
+                
+                if (pageName === 'Progress') {
+                    searchBar.style.display = 'none';
+                } else {
+                    searchBar.style.display = 'flex';
+                }
+            }
+
+            featureButtons.forEach((button, index) => {
+                button.addEventListener('click', () => {
+                    featureButtons.forEach((btn, i) => {
+                        btn.classList.remove('selected');
+                        fbSpans[i].classList.remove('selected');
+                    });
+                    button.classList.add('selected');
+                    fbSpans[index].classList.add('selected');
+                    showFeaturePage(button.dataset.page);
+                });
+            });
+
+            document.getElementById('prevMonth').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                updateMonth();
+                updateDays();
+            });
+
+            document.getElementById('nextMonth').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                updateMonth();
+                updateDays();
+            });
+
+            updateMonth();
+            updateDays();
+
+            // Set first feature button and span as initially selected
+            showPage('home');
+
+            const ctx = document.getElementById('fitnessChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: fitnessData.map(data => data.hour),
+                    datasets: [
+                        {
+                            label: 'Steps',
+                            data: fitnessData.map(data => data.steps),
+                            borderColor: 'rgb(147, 51, 234)',
+                            backgroundColor: 'rgba(147, 51, 234, 0.1)',
+                            borderWidth: 1,
+                            tension: 0.4,
+                            yAxisID: 'y-steps',
+                            pointRadius: 0,
+                        },
+                        {
+                            label: 'Calories',
+                            data: fitnessData.map(data => data.calories),
+                            borderColor: 'rgb(249, 115, 22)',
+                            backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                            borderWidth: 1,
+                            tension: 0.4,
+                            yAxisID: 'y-calories',
+                            pointRadius: 0,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#888888',
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: 'white',
+                            bodyColor: 'white',
+                            displayColors: true,
+                            padding: 5
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#888888',
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        },
+                        'y-steps': {
+                            type: 'linear',
+                            position: 'left',
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#888888',
+                                font: {
+                                    size: 10
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Steps',
+                                color: '#888888',
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        },
+                        'y-calories': {
+                            type: 'linear',
+                            position: 'right',
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#888888',
+                                font: {
+                                    size: 10
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Calories',
+                                color: '#888888',
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            const exercises = [
+                'Push-ups', 'Squats', 'Lunges', 'Plank', 'Burpees',
+                'Mountain Climbers', 'Jumping Jacks', 'Crunches', 'Dips',
+                'High Knees', 'Russian Twists', 'Leg Raises', 'Glute Bridges',
+                'Wall Sit', 'Bicycle Crunches'
+            ];
+            let dayCount = 0;
+            function createDay() {
+                dayCount++;
+                const day = document.createElement('div');
+                day.className = 'dayProgramm';
+                day.innerHTML = `
+                    <div class="day-header">
+                        <input type="text" class="day-name" value="Your Day ${dayCount}">
+                        <button class="add-button add-exercise">+</button>
+                    </div>
+                `;
+                document.getElementById('program').appendChild(day);
+
+                day.querySelector('.add-exercise').addEventListener('click', () => addExercise(day));
+            }
+            function addExercise(day) {
+                const exercise = document.createElement('div');
+                exercise.className = 'exercise';
+                exercise.innerHTML = `
+                    <div class="training-programm-exercises">
+                        <select>
+                            ${exercises.map(ex => `<option>${ex}</option>`).join('')}
+                        </select>
+                        <div class="noaar-field"><input type="text" class="noaar-field-write" value="..."></div>
+                    </div>
+                `;
+                day.appendChild(exercise);
+            }
+
+            document.getElementById('addDay').addEventListener('click', createDay);
+
+            const API_KEY = 'b2cc7ac9be4c43538c4802b0f6de36eb';
+            let recipes = [];
+
+            async function fetchRecipes() {
+                try {
+                    const response = await fetch(
+                        `https://api.spoonacular.com/recipes/random?number=25&apiKey=${API_KEY}`
+                    );
+                    const data = await response.json();
+                    recipes = data.recipes;
+                    createSlider();
+                } catch (error) {
+                    console.error('Error fetching recipes:', error);
+                }
+            }
+
+            function createSlider() {
+                const slider = document.getElementById('productSlider');
+                recipes.forEach(recipe => {
+                    const item = document.createElement('div');
+                    item.className = 'slider-item';
+                    item.innerHTML = `
+                        <img src="${recipe.image}" alt="${recipe.title}">
+                        <div class="caption">${recipe.title}</div>
+                    `;
+                    item.onclick = () => showDetailedView(recipe);
+                    slider.appendChild(item);
+                });
+            }
+
+            let dayCountDiet = 0;
+
+            function addDay() {
+                dayCountDiet++;
+                const dayContainer = document.createElement('div');
+                dayContainer.className = 'day-container';
+                dayContainer.innerHTML = `
+                    <div class="day-title">
+                        <input type="text" value="Your day ${dayCountDiet}" onchange="updateDayTitle(this)">
+                        <button class="add-dish-btn">Add Dish</button>
+                    </div>
+                    <div class="dish-list"></div>
+                    <div class="nutrition-total">
+                        <p>Total Calories: <span class="total-calories">0</span></p>
+                        <p>Total Protein: <span class="total-protein">0</span></p>
+                        <p>Total Fat: <span class="total-fat">0</span></p>
+                        <p>Total Carbs: <span class="total-carbs">0</span></p>
+                    </div>
+                `;
+                document.getElementById('dietContainer').appendChild(dayContainer);
+
+                // Add event listener to the "Add Dish" button
+                dayContainer.querySelector('.add-dish-btn').addEventListener('click', function() {
+                    addDish(this);
+                });
+            }
+
+            function addDish(button) {
+                const dishList = button.closest('.day-container').querySelector('.dish-list');
+                const dishItem = document.createElement('div');
+                dishItem.className = 'dish-item';
+                dishItem.innerHTML = `
+                    <select>
+                        <option value="">Select a dish</option>
+                        ${recipes.map(r => `<option value="${r.id}">${r.title}</option>`).join('')}
+                    </select>
+                    <input type="number" value="1" min="1"> serving(s)
+                `;
+                dishList.appendChild(dishItem);
+
+                // Add event listeners to the select and input elements
+                const select = dishItem.querySelector('select');
+                const input = dishItem.querySelector('input');
+                select.addEventListener('change', () => updateNutrition(select));
+                input.addEventListener('change', () => updateNutrition(select));
+            }
+
+            async function updateNutrition(select) {
+                const dayContainer = select.closest('.day-container');
+                const servings = parseInt(select.nextElementSibling.value);
+                const nutritionTotal = dayContainer.querySelector('.nutrition-total');
+
+                try {
+                    const response = await fetch(
+                        `https://api.spoonacular.com/recipes/${select.value}/nutritionWidget.json?apiKey=${API_KEY}`
+                    );
+                    const info = await response.json();
+
+                    let totalCalories = parseFloat(nutritionTotal.querySelector('.total-calories').textContent);
+                    let totalProtein = parseFloat(nutritionTotal.querySelector('.total-protein').textContent);
+                    let totalFat = parseFloat(nutritionTotal.querySelector('.total-fat').textContent);
+                    let totalCarbs = parseFloat(nutritionTotal.querySelector('.total-carbs').textContent);
+
+                    totalCalories += parseFloat(info.calories) * servings;
+                    totalProtein += parseFloat(info.protein.replace('g', '')) * servings;
+                    totalFat += parseFloat(info.fat.replace('g', '')) * servings;
+                    totalCarbs += parseFloat(info.carbs.replace('g', '')) * servings;
+
+                    nutritionTotal.querySelector('.total-calories').textContent = totalCalories.toFixed(1);
+                    nutritionTotal.querySelector('.total-protein').textContent = totalProtein.toFixed(1);
+                    nutritionTotal.querySelector('.total-fat').textContent = totalFat.toFixed(1);
+                    nutritionTotal.querySelector('.total-carbs').textContent = totalCarbs.toFixed(1);
+                } catch (error) {
+                    console.error('Error updating nutrition:', error);
+                }
+            }
+
+            fetchRecipes();
+
+            // Add event listener to the "Add Day" button
+            document.querySelector('.add-btn').addEventListener('click', addDay);
+
+            // Add the first day
+            addDay();
+        });
+    </script>
+</body>
+</html>
